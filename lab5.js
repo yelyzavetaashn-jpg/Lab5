@@ -25,3 +25,35 @@ function asyncMapCallback(arr, asyncFn, finalCallback) {
         });
     });
 }
+
+function asyncMapPromise(arr, asyncFn) {
+  return new Promise((resolve, reject) => {
+    const results = [];
+    let completed = 0;
+    let hasError = false;
+
+    if (arr.length === 0) {
+      return resolve(results);
+    }
+
+    arr.forEach((item, index) => {
+      Promise.resolve(asyncFn(item))
+        .then(result => {
+          if (hasError) return;
+
+          results[index] = result;
+          completed++;
+
+          if (completed === arr.length) {
+            resolve(results);
+          }
+        })
+        .catch(err => {
+          if (!hasError) {
+            hasError = true;
+            reject(err);
+          }
+        });
+    });
+  });
+}
