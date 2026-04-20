@@ -57,3 +57,14 @@ function asyncMapPromise(arr, asyncFn) {
     });
   });
 }
+
+async function asyncMapAwait(arr, asyncFn) {
+  const results = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    const value = await asyncFn(arr[i]);
+    results.push(value);
+  }
+
+  return results;
+}
